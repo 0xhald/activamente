@@ -75,7 +75,7 @@ defmodule Activamente.AI.ChunkingService do
     else
       # Get the last overlap_size characters, but try to break at word boundary
       start_pos = String.length(text) - overlap_size
-      overlap_part = String.slice(text, start_pos..-1)
+      overlap_part = String.slice(text, start_pos, overlap_size)
       
       case String.split(overlap_part, " ", parts: 2) do
         [_first_partial_word, rest] -> rest

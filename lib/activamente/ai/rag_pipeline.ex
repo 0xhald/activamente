@@ -40,14 +40,19 @@ defmodule Activamente.AI.RAGPipeline do
         {final_response, function_results} = process_function_calls(response, conversation_id)
 
         # Save assistant message
-        {:ok, assistant_msg} =
-          Conversations.create_message(%{
-            conversation_id: conversation_id,
-            role: "assistant",
-            content: final_response["content"],
-            function_call: response["tool_calls"],
-            function_result: function_results
-          })
+        assistant_message_attrs = %{
+          conversation_id: conversation_id,
+          role: "assistant",
+          content: final_response["content"] || ""
+        }
+
+        # Only add function_call and function_result if they exist and are valid maps
+        assistant_message_attrs =
+          assistant_message_attrs
+          |> maybe_add_function_call(response["tool_calls"])
+          |> maybe_add_function_result(function_results)
+
+        {:ok, assistant_msg} = Conversations.create_message(assistant_message_attrs)
 
         {:ok,
          %{
@@ -189,4 +194,18 @@ defmodule Activamente.AI.RAGPipeline do
       {response, nil}
     end
   end
+
+  defp maybe_add_function_call(attrs, nil), do: attrs
+  defp maybe_add_function_call(attrs, []), do: attrs
+  defp maybe_add_function_call(attrs, tool_calls) when is_list(tool_calls) do
+    Map.put(attrs, :function_call, %{tool_calls: tool_calls})
+  end
+  defp maybe_add_function_call(attrs, _), do: attrs
+
+  defp maybe_add_function_result(attrs, nil), do: attrs
+  defp maybe_add_function_result(attrs, []), do: attrs
+  defp maybe_add_function_result(attrs, function_results) when is_list(function_results) do
+    Map.put(attrs, :function_result, %{results: function_results})
+  end
+  defp maybe_add_function_result(attrs, _), do: attrs
 end

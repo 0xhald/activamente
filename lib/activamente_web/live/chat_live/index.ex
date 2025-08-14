@@ -2,7 +2,9 @@ defmodule ActivamenteWeb.ChatLive.Index do
   use ActivamenteWeb, :live_view
 
   alias Activamente.{Conversations, Documents}
-  alias Activamente.AI.{RAGPipeline, ChunkingService}
+  alias Activamente.AI.{RAGPipeline, ChunkingService, EmbeddingService}
+  
+  require Logger
 
   @impl true
   def mount(_params, _session, socket) do
@@ -179,8 +181,17 @@ defmodule ActivamenteWeb.ChatLive.Index do
       Documents.create_chunk(Map.put(chunk_data, :document_id, document.id))
     end)
 
-    # TODO: Generate embeddings in background job
-    # For now, we'll skip this step
+    # Generate embeddings for the document chunks
+    case EmbeddingService.generate_embeddings_for_document(document.id) do
+      {:ok, _chunks} ->
+        Logger.info("Successfully generated embeddings for document #{document.id}")
+
+      {:partial_success, successful_chunks, errors} ->
+        Logger.warning("Partial success generating embeddings for document #{document.id}: #{length(successful_chunks)} successful, #{length(errors)} failed")
+
+      {:error, reason} ->
+        Logger.error("Failed to generate embeddings for document #{document.id}: #{reason}")
+    end
   end
 
   @impl true
