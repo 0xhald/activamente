@@ -10,6 +10,7 @@ defmodule Activamente.Application do
     children = [
       ActivamenteWeb.Telemetry,
       Activamente.Repo,
+      {Oban, Application.fetch_env!(:activamente, Oban)},
       {DNSCluster, query: Application.get_env(:activamente, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Activamente.PubSub},
       # Start a worker by calling: Activamente.Worker.start_link(arg)

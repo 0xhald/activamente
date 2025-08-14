@@ -9,7 +9,9 @@ import Config
 
 config :activamente,
   ecto_repos: [Activamente.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime, binary_id: true]
+
+config :activamente, Activamente.Repo, types: Activamente.PostgrexTypes
 
 # Configures the endpoint
 config :activamente, ActivamenteWeb.Endpoint,
@@ -59,6 +61,16 @@ config :logger, :default_formatter,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# Configure Oban for background jobs
+config :activamente, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [
+    default: 10,
+    processing: 5,
+    embeddings: 3
+  ],
+  repo: Activamente.Repo
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

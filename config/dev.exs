@@ -85,3 +85,12 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+# AI Configuration
+config :activamente, :ai,
+  openai_api_key: System.get_env("OPENAI_API_KEY"),
+  anthropic_api_key: System.get_env("ANTHROPIC_API_KEY"),
+  embedding_model: "text-embedding-3-small",
+  chat_model: "gpt-4o-mini",
+  max_tokens: 4096,
+  temperature: 0.7
