@@ -59,6 +59,7 @@ defmodule Activamente.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
+      {:dotenvy, "~> 1.0.0"},
       # AI and ML dependencies
       {:nx, "~> 0.7"},
       {:pgvector, "~> 0.2"},
