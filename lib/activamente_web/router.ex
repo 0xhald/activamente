@@ -17,7 +17,7 @@ defmodule ActivamenteWeb.Router do
   scope "/", ActivamenteWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", ChatLive.Index, :index
     live "/chat", ChatLive.Index, :index
   end
 
