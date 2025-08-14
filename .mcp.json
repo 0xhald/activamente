@@ -1,15 +1,15 @@
 {
   "mcpServers": {
     "postgres-server": {
-      "type": "stdio",
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "run",
-        "--directory",
-        "/Users/hector/Tools/mcp-alchemy",
-        "-m",
-        "mcp_alchemy.server",
-        "main"
+        "--from",
+        "mcp-alchemy==2025.7.9.172934",
+        "--with",
+        "psycopg2-binary",
+        "--refresh-package",
+        "mcp-alchemy",
+        "mcp-alchemy"
       ],
       "env": {
         "DB_URL": "postgresql://postgres:postgres@localhost/activamente_dev"
