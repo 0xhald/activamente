@@ -197,15 +197,17 @@ defmodule Activamente.AI.RAGPipeline do
 
   defp maybe_add_function_call(attrs, nil), do: attrs
   defp maybe_add_function_call(attrs, []), do: attrs
+
   defp maybe_add_function_call(attrs, tool_calls) when is_list(tool_calls) do
     Map.put(attrs, :function_call, %{tool_calls: tool_calls})
   end
+
   defp maybe_add_function_call(attrs, _), do: attrs
 
   defp maybe_add_function_result(attrs, nil), do: attrs
   defp maybe_add_function_result(attrs, []), do: attrs
+
   defp maybe_add_function_result(attrs, function_results) when is_list(function_results) do
     Map.put(attrs, :function_result, %{results: function_results})
   end
-  defp maybe_add_function_result(attrs, _), do: attrs
 end
