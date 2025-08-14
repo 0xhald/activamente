@@ -5,8 +5,8 @@ defmodule ActivamenteWeb.DocumentController do
 
   def index(conn, _params) do
     documents = Documents.list_documents()
-    
-    formatted_documents = 
+
+    formatted_documents =
       documents
       |> Enum.map(fn doc ->
         %{
@@ -38,7 +38,7 @@ defmodule ActivamenteWeb.DocumentController do
         })
 
       {:error, changeset} ->
-        errors = 
+        errors =
           changeset.errors
           |> Enum.map(fn {field, {message, _}} -> "#{field}: #{message}" end)
 
@@ -63,7 +63,7 @@ defmodule ActivamenteWeb.DocumentController do
         })
 
       {:error, changeset} ->
-        errors = 
+        errors =
           changeset.errors
           |> Enum.map(fn {field, {message, _}} -> "#{field}: #{message}" end)
 
@@ -73,11 +73,24 @@ defmodule ActivamenteWeb.DocumentController do
     end
   end
 
+  defp create_document_from_json(%{
+         "filename" => filename,
+         "content" => content,
+         "content_type" => content_type
+       }) do
+    Documents.create_document(%{
+      filename: filename,
+      content_type: content_type,
+      file_size: String.length(content),
+      original_content: content
+    })
+  end
+
   defp create_document_from_upload(%Plug.Upload{
-    filename: filename,
-    content_type: content_type,
-    path: temp_path
-  }) do
+         filename: filename,
+         content_type: content_type,
+         path: temp_path
+       }) do
     case File.read(temp_path) do
       {:ok, content} ->
         Documents.create_document(%{
@@ -91,19 +104,6 @@ defmodule ActivamenteWeb.DocumentController do
       {:error, reason} ->
         {:error, "Could not read uploaded file: #{reason}"}
     end
-  end
-
-  defp create_document_from_json(%{
-    "filename" => filename,
-    "content" => content,
-    "content_type" => content_type
-  }) do
-    Documents.create_document(%{
-      filename: filename,
-      content_type: content_type,
-      file_size: String.length(content),
-      original_content: content
-    })
   end
 
   defp create_document_from_upload(_), do: {:error, "Invalid file parameters"}
