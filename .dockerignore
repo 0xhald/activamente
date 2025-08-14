@@ -1,0 +1,80 @@
+# Elixir build artifacts
+_build/
+deps/
+*.ez
+
+# Mix-related
+/.elixir_ls/
+/.fetch
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Assets
+/assets/node_modules/
+
+# Phoenix static assets
+/priv/static/
+
+# Temporary files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+cover/
+excoveralls/
+
+# Documentation
+doc/
+
+# Releases
+*.tar
+
+# Development database
+*.db-wal
+*.db-shm
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Editor files
+*.sublime-*
+.vscode/
+.idea/
+
+# Uploads (if you want to exclude them from the image)
+# uploads/
