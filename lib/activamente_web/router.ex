@@ -18,12 +18,20 @@ defmodule ActivamenteWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/chat", ChatLive.Index, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ActivamenteWeb do
-  #   pipe_through :api
-  # end
+  # API routes
+  scope "/api", ActivamenteWeb do
+    pipe_through :api
+
+    post "/chat", ChatController, :create_message
+    get "/conversations/:id/messages", ChatController, :get_messages
+    post "/documents", DocumentController, :upload
+    get "/documents", DocumentController, :index
+    post "/notes", NotesController, :create
+    get "/notes", NotesController, :index
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:activamente, :dev_routes) do
