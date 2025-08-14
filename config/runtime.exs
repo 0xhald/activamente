@@ -7,6 +7,15 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
+import Dotenvy
+
+source!([
+  Path.absname(".env"),
+  Path.absname(".#{config_env()}.env"),
+  Path.absname(".#{config_env()}.overrides.env"),
+  System.get_env()
+])
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server
