@@ -16,6 +16,21 @@ source!([
   System.get_env()
 ])
 
+# Configure your database
+config :activamente, Activamente.Repo,
+  url: env!("DATABASE_URL", :string!),
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
+# AI Configuration
+config :activamente, :ai,
+  openai_api_key: env!("OPENAI_API_KEY", :string),
+  embedding_model: "text-embedding-3-small",
+  chat_model: "gpt-4o-mini",
+  max_tokens: 4096,
+  temperature: 0.7
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server

@@ -5,7 +5,7 @@ defmodule Activamente.AI.LLMClient do
 
   require Logger
 
-  @config Application.compile_env(:activamente, :ai, [])
+  @config Application.get_env(:activamente, :ai, [])
 
   def chat_completion(messages, opts \\ []) do
     provider = Keyword.get(opts, :provider, :openai)
@@ -26,7 +26,7 @@ defmodule Activamente.AI.LLMClient do
   end
 
   defp openai_chat_completion(messages, model, max_tokens, temperature, tools) do
-    api_key = @config[:openai_api_key] || System.get_env("OPENAI_API_KEY")
+    api_key = @config[:openai_api_key]
 
     if is_nil(api_key) do
       {:error, "OpenAI API key not configured"}
@@ -65,7 +65,7 @@ defmodule Activamente.AI.LLMClient do
   end
 
   defp openai_embedding(text, model) do
-    api_key = @config[:openai_api_key] || System.get_env("OPENAI_API_KEY")
+    api_key = @config[:openai_api_key]
 
     if is_nil(api_key) do
       {:error, "OpenAI API key not configured"}
