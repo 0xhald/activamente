@@ -16,7 +16,7 @@ defmodule Activamente.AI.LLMClient do
 
     case provider do
       :openai -> openai_chat_completion(messages, model, max_tokens, temperature, tools)
-      :anthropic -> anthropic_chat_completion(messages, model, max_tokens, temperature, tools)
+      _ -> {:error, "Unsupported provider"}
     end
   end
 
@@ -59,45 +59,6 @@ defmodule Activamente.AI.LLMClient do
 
         {:error, reason} ->
           Logger.error("OpenAI API request failed: #{inspect(reason)}")
-          {:error, "Request failed: #{reason}"}
-      end
-    end
-  end
-
-  defp anthropic_chat_completion(messages, model, max_tokens, temperature, _tools) do
-    api_key = @config[:anthropic_api_key] || System.get_env("ANTHROPIC_API_KEY")
-
-    if is_nil(api_key) do
-      {:error, "Anthropic API key not configured"}
-    else
-      headers = [
-        {"x-api-key", api_key},
-        {"Content-Type", "application/json"},
-        {"anthropic-version", "2023-06-01"}
-      ]
-
-      body = %{
-        model: model || "claude-3-haiku-20240307",
-        max_tokens: max_tokens,
-        temperature: temperature,
-        messages: messages
-      }
-
-      case Req.post("https://api.anthropic.com/v1/messages",
-             headers: headers,
-             json: body
-           ) do
-        {:ok, %{status: 200, body: response}} ->
-          content = List.first(response["content"])
-          message = %{"role" => "assistant", "content" => content["text"]}
-          {:ok, message}
-
-        {:ok, %{status: status, body: body}} ->
-          Logger.error("Anthropic API error: #{status} - #{inspect(body)}")
-          {:error, "API request failed: #{status}"}
-
-        {:error, reason} ->
-          Logger.error("Anthropic API request failed: #{inspect(reason)}")
           {:error, "Request failed: #{reason}"}
       end
     end
